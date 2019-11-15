@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Link, withRouter, useHistory, Redirect } from 'react-router-dom';  
+import { Link } from 'react-router-dom';  
 
 export class FetchNhanVien extends Component {
     static displayName = FetchNhanVien.name;
@@ -12,10 +12,13 @@ export class FetchNhanVien extends Component {
             .then(data => {
                 this.setState({ nhanviens: data, loading: false });
             });
-        this.handleDelete = this.handleDelete.bind(this);
     }
 
-    handleDelete(id) {
+    handleEdit = (id) => {
+        this.props.history.push('/nhanviens/edit/' + id)
+    }
+
+    handleDelete = (id) => {
         if (!window.confirm("Do you want to delete employee with Id: " + id))
             return;
         else {
@@ -32,19 +35,18 @@ export class FetchNhanVien extends Component {
         }
     } 
 
-
-    static renderNhanviensTable(nhanviens) {
+    renderNhanviensTable(nhanviens) {
         return (
-            <view>
+            <div>
 
                 <table className='table table-striped'>
                     <thead>
                         <tr>
                             <th>Mã NV</th>
                             <th>Họ tên</th>
-                            <th>Thành phố</th>
-                            <th>Căn hộ</th>
                             <th>Giới tính</th>
+                            <th>Căn hộ</th>
+                            <th>Thành phố</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,25 +54,25 @@ export class FetchNhanVien extends Component {
                             <tr key={nv.maNv}>
                                 <td>{nv.maNv}</td>
                                 <td>{nv.hoTen}</td>
-                                <td>{nv.thanhPho}</td>
-                                <td>{nv.canHo}</td>
                                 <td>{nv.gioiTinh}</td>
+                                <td>{nv.canHo}</td>
+                                <td>{nv.thanhPho}</td>
                                 <td>
-                                    <Link to={'nhanviens/edit/' + nv.maNv} >Edit </Link>
-                                    
+                                    <a onClick={(id) => this.handleEdit(nv.maNv)}>Edit </a> |
+                                    <a onClick={(id) => this.handleDelete(nv.maNv)}>Delete </a>
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
-            </view>
+            </div>
         );
     }
 
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : FetchNhanVien.renderNhanviensTable(this.state.nhanviens);
+            : this.renderNhanviensTable(this.state.nhanviens);
 
         return (
             <div>

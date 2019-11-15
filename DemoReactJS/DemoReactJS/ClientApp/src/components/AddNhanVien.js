@@ -1,4 +1,4 @@
-﻿import { Link, withRouter,Redirect } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 
 
@@ -6,9 +6,9 @@ export class AddNhanVien extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { title: "", loading: true, thanhphoList: [], maNv: 0, nvData: NhanvienData };
+        this.state = { title: "", loading: true, thanhphoList: [], nvData: new NhanvienData() };
 
-        var nvmanv = this.props.match.params.nvmanv;
+        var nvmanv = this.props.match.params["nvmanv"];
 
         fetch('api/Nhanviens/GetThanhpho')
             .then(response => response.json())
@@ -24,44 +24,57 @@ export class AddNhanVien extends Component {
                 });
         }
         else {
-            this.state = { title: "Create", loading: false, thanhphoList: [], nvData: new NhanvienData };
+            this.state = { title: "Create", loading: false, thanhphoList: [], nvData: new NhanvienData() };
         }
 
-        // This binding is necessary to make "this" work in the callback  
         this.handleSave = this.handleSave.bind(this);
     }
 
 
     handleSave(event) {
-        
         event.preventDefault();
         const data = new FormData(event.target);
-
+        console.log(event.target);
+        if (this.state.nvData.maNv) {
             fetch('api/Nhanviens/Edit', {
                 method: 'PUT',
-                body: data
-            }).then((response) => response.json())
-                .then(() => {  })
+                body: data,
+            }).then(response => response.json())
+                .then(() => {
+                    this.props.history.push('/fetch-nhanvien');
+                    console.log(this.body);
+                })
+        }
+        else {
+            fetch('api/Nhanviens/Create', {
+                method: 'POST',
+                body: data,
+            }).then(response => response.json())
+                .then(() => {
+                    this.props.history.push("/fetch-nhanvien");
+                    console.log(this.body);
+                })  
+        }
         
     }
 
 
-    static renderCreateForm(thanhphoList, nvData) {
+    renderCreateForm(thanhphoList) {
         return (
-            <form onSubmit={<Redirect to='/fetch-nhanvien' />}>
+            <form onSubmit={this.handleSave}>
                 <div className="form-group row" >
-                    <input type="hidden" name="maNv" value={nvData.maNv} />
+                    <input type="hidden" name="maNv" value={this.state.nvData.maNv} />
                 </div>
                 < div className="form-group row" >
-                    <label className=" control-label col-md-12" htmlFor="Name">Họ tên</label>
+                    <label className=" control-label col-md-12" htmlFor="hoTen">Họ tên</label>
                     <div className="col-md-4">
-                        <input className="form-control" type="text" name="name" defaultValue={nvData.hoTen} required />
+                        <input className="form-control" type="text" name="hoTen" defaultValue={this.state.nvData.hoTen} required />
                     </div>
                 </div >
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="Gender">Giới tính</label>
+                    <label className="control-label col-md-12" htmlFor="gioiTinh">Giới tính</label>
                     <div className="col-md-4">
-                        <select className="form-control" data-val="true" name="gender" defaultValue={nvData.gioiTinh} required>
+                        <select className="form-control" data-val="true" name="gioiTinh" defaultValue={this.state.nvData.gioiTinh} required>
                             <option value="">-- Chọn giới tính --</option>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
@@ -69,15 +82,15 @@ export class AddNhanVien extends Component {
                     </div>
                 </div >
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="Department" >Căn hộ</label>
+                    <label className="control-label col-md-12" htmlFor="canHo" >Căn hộ</label>
                     <div className="col-md-4">
-                        <input className="form-control" type="text" name="Department" defaultValue={nvData.canHo} required />
+                        <input className="form-control" type="text" name="canHo" defaultValue={this.state.nvData.canHo} required />
                     </div>
                 </div>
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="City">Thành phố</label>
+                    <label className="control-label col-md-12" htmlFor="thanhPho">Thành phố</label>
                     <div className="col-md-4">
-                        <select className="form-control" data-val="true" name="City" defaultValue={nvData.thanhPho} required>
+                        <select className="form-control" data-val="true" name="thanhPho" defaultValue={this.state.nvData.thanhPho} required>
                             <option value="">-- Chọn thành phố --</option>
                             {thanhphoList.map(tp =>
                                 <option key={tp.maTp} value={tp.tenTp}>{tp.tenTp}</option>
@@ -96,10 +109,9 @@ export class AddNhanVien extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : AddNhanVien.renderCreateForm(this.state.thanhphoList, this.state.nvData);
+            : this.renderCreateForm(this.state.thanhphoList);
         return <div>
             <h1>{this.state.title}</h1>
-            <h3>Create new</h3>
             <hr />
             {contents}
         </div>;
