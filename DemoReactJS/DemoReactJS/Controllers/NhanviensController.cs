@@ -13,7 +13,7 @@ namespace DemoReactJS.Controllers
     [ApiController]
     public class NhanviensController : ControllerBase
     {
-        private readonly EmployeeContext _context;
+        EmployeeContext _context = new EmployeeContext();
         EmployeeDb db = new EmployeeDb();
 
         public NhanviensController(EmployeeContext context)
@@ -35,16 +35,16 @@ namespace DemoReactJS.Controllers
             return db.Details(id);
         }
 
-        // PUT: api/Nhanviens/5
+        // PUT: api/Nhanviens
         [HttpPut("[action]")]
-        public int Edit(Nhanvien nv)
+        public int Update([FromForm]Nhanvien nv)
         {
             return db.Edit(nv);
         }
 
         // POST: api/Nhanviens
         [HttpPost("[action]")]
-        public int Create(Nhanvien nv)
+        public int Create([FromForm]Nhanvien nv)
         {
             return db.Add(nv);
         }

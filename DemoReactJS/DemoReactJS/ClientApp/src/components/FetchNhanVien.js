@@ -78,7 +78,7 @@ export class FetchNhanVien extends Component {
             <div>
                 <h1>Index</h1>
                 <p>
-                    <Link to="/AddNhanVien">Create New</Link>
+                    <Link to="/addnhanvien">Create New</Link>
                 </p>
                 {contents}
             </div>

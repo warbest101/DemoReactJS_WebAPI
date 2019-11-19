@@ -34,15 +34,14 @@ export class AddNhanVien extends Component {
     handleSave(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        console.log(event.target);
         if (this.state.nvData.maNv) {
-            fetch('api/Nhanviens/Edit', {
+            fetch('api/Nhanviens/Update', {
                 method: 'PUT',
                 body: data,
             }).then(response => response.json())
-                .then(() => {
+                .then((data) => {
                     this.props.history.push('/fetch-nhanvien');
-                    console.log(this.body);
+                    console.log(JSON.stringify(data));
                 })
         }
         else {
@@ -50,9 +49,9 @@ export class AddNhanVien extends Component {
                 method: 'POST',
                 body: data,
             }).then(response => response.json())
-                .then(() => {
+                .then((data) => {
                     this.props.history.push("/fetch-nhanvien");
-                    console.log(this.body);
+                    console.log(JSON.stringify(data));
                 })  
         }
         

@@ -12,7 +12,7 @@ export default class App extends Component {
       <Layout>
         <Route exact path='/' component={Home} />
             <Route path='/fetch-nhanvien' component={FetchNhanVien} />
-            <Route path='/AddNhanVien' component={AddNhanVien} />
+            <Route path='/addnhanvien' component={AddNhanVien} />
             <Route path='/nhanviens/edit/:nvmanv' component={AddNhanVien} />
       </Layout>
     );
