@@ -6,25 +6,20 @@ export class AddNhanVien extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { title: "", loading: true, thanhphoList: [], nvData: new NhanvienData() };
+        this.state = { title: "", loading: true, empData: new EmployeeData() };
 
-        var nvmanv = this.props.match.params["nvmanv"];
+        var empid = this.props.match.params["empid"];
 
-        fetch('api/Nhanviens/GetThanhpho')
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ thanhphoList: data });
-            });
 
-        if (nvmanv > 0) {
-            fetch('api/Nhanviens/Details/' + nvmanv)
+        if (empid > 0) {
+            fetch('api/Nhanviens/Details/' + empid)
                 .then(response => response.json())
                 .then(data => {
-                    this.setState({ title: "Edit", loading: false, nvData: data });
+                    this.setState({ title: "Edit", loading: false, empData: data });
                 });
         }
         else {
-            this.state = { title: "Create", loading: false, thanhphoList: [], nvData: new NhanvienData() };
+            this.state = { title: "Create", loading: false, empData: new EmployeeData() };
         }
 
         this.handleSave = this.handleSave.bind(this);
@@ -34,8 +29,8 @@ export class AddNhanVien extends Component {
     handleSave(event) {
         event.preventDefault();
         const data = new FormData(event.target);
-        if (this.state.nvData.maNv) {
-            fetch('api/Nhanviens/Update', {
+        if (this.state.empData.id) {
+            fetch('api/Nhanviens/Update/' + this.state.empData.id, {
                 method: 'PUT',
                 body: data,
             }).then(response => response.json())
@@ -58,22 +53,22 @@ export class AddNhanVien extends Component {
     }
 
 
-    renderCreateForm(thanhphoList) {
+    renderCreateForm() {
         return (
             <form onSubmit={this.handleSave}>
                 <div className="form-group row" >
-                    <input type="hidden" name="maNv" value={this.state.nvData.maNv} />
+                    <input type="hidden" name="id" value={this.state.empData.id} />
                 </div>
                 < div className="form-group row" >
-                    <label className=" control-label col-md-12" htmlFor="hoTen">Họ tên</label>
+                    <label className=" control-label col-md-12" htmlFor="name">Name</label>
                     <div className="col-md-4">
-                        <input className="form-control" type="text" name="hoTen" defaultValue={this.state.nvData.hoTen} required />
+                        <input className="form-control" type="text" name="name" defaultValue={this.state.empData.name} required />
                     </div>
                 </div >
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="gioiTinh">Giới tính</label>
+                    <label className="control-label col-md-12" htmlFor="gender">Gender</label>
                     <div className="col-md-4">
-                        <select className="form-control" data-val="true" name="gioiTinh" defaultValue={this.state.nvData.gioiTinh} required>
+                        <select className="form-control" data-val="true" name="gender" defaultValue={this.state.empData.gender} required>
                             <option value="">-- Chọn giới tính --</option>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
@@ -81,19 +76,21 @@ export class AddNhanVien extends Component {
                     </div>
                 </div >
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="canHo" >Căn hộ</label>
+                    <label className="control-label col-md-12" htmlFor="apartment" >Apartment</label>
                     <div className="col-md-4">
-                        <input className="form-control" type="text" name="canHo" defaultValue={this.state.nvData.canHo} required />
+                        <input className="form-control" type="text" name="apartment" defaultValue={this.state.empData.apartment} required />
                     </div>
                 </div>
                 <div className="form-group row">
-                    <label className="control-label col-md-12" htmlFor="thanhPho">Thành phố</label>
+                    <label className="control-label col-md-12" htmlFor="city">City</label>
                     <div className="col-md-4">
-                        <select className="form-control" data-val="true" name="thanhPho" defaultValue={this.state.nvData.thanhPho} required>
+                        <select className="form-control" data-val="true" name="city" defaultValue={this.state.empData.city} required>
                             <option value="">-- Chọn thành phố --</option>
-                            {thanhphoList.map(tp =>
-                                <option key={tp.maTp} value={tp.tenTp}>{tp.tenTp}</option>
-                            )}
+                            <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                            <option value="Đà Nẵng">Đà Nẵng</option>
+                            <option value="Hà Nội">Hà Nội</option>
+                            <option value="Hải Phòng">Hải Phòng</option>
+                            <option value="Vũng Tàu">Vũng Tàu</option>
                         </select>
                     </div>
                 </div >
@@ -108,7 +105,7 @@ export class AddNhanVien extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderCreateForm(this.state.thanhphoList);
+            : this.renderCreateForm();
         return <div>
             <h1>{this.state.title}</h1>
             <hr />
@@ -119,12 +116,12 @@ export class AddNhanVien extends Component {
 
 }
 
-export class NhanvienData {
-    maNv = 0;
-    hoTen = "";
-    gioiTinh = "";
-    thanhPho = "";
-    canHo = "";
+export class EmployeeData {
+    id = 0;
+    name = "";
+    gender = "";
+    city = "";
+    apartment = "";
     
 }
 

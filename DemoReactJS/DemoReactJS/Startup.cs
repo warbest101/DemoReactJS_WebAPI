@@ -1,4 +1,3 @@
-using DemoReactJS.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,7 +22,6 @@ namespace DemoReactJS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<EmployeeContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Employee")));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

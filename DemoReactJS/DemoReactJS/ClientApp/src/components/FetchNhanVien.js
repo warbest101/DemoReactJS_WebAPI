@@ -6,73 +6,49 @@ export class FetchNhanVien extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { nhanviens: [], loading: true };
+        this.state = { employees: [], loading: true };
         fetch('api/Nhanviens/GetAll')
             .then(response => response.json())
             .then(data => {
-                this.setState({ nhanviens: data, loading: false });
+                this.setState({ employees: data, loading: false });
             });
     }
 
-    handleEdit = (id) => {
-        this.props.history.push('/nhanviens/edit/' + id)
-    }
-
-    handleDelete = (id) => {
-        if (!window.confirm("Do you want to delete employee with Id: " + id))
-            return;
-        else {
-            fetch('api/Nhanviens/Delete/' + id, {
-                method: 'delete'
-            }).then(data => {
-                this.setState(
-                    {
-                        nhanviens: this.state.nhanviens.filter((rec) => {
-                            return (rec.maNv != id);
-                        })
-                    });
-            });
-        }
-    } 
-
-    renderNhanviensTable(nhanviens) {
+    renderNhanviensTable(employees) {
         return (
-            <div>
-
                 <table className='table table-striped'>
                     <thead>
                         <tr>
-                            <th>Mã NV</th>
-                            <th>Họ tên</th>
-                            <th>Giới tính</th>
-                            <th>Căn hộ</th>
-                            <th>Thành phố</th>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Apartment</th>
+                            <th>City</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {nhanviens.map(nv =>
-                            <tr key={nv.maNv}>
-                                <td>{nv.maNv}</td>
-                                <td>{nv.hoTen}</td>
-                                <td>{nv.gioiTinh}</td>
-                                <td>{nv.canHo}</td>
-                                <td>{nv.thanhPho}</td>
+                        {employees.map(emp =>
+                            <tr key={emp.id}>
+                                <td>{emp.id}</td>
+                                <td>{emp.name}</td>
+                                <td>{emp.gender}</td>
+                                <td>{emp.apartment}</td>
+                                <td>{emp.city}</td>
                                 <td>
-                                    <a onClick={(id) => this.handleEdit(nv.maNv)}>Edit </a> |
-                                    <a onClick={(id) => this.handleDelete(nv.maNv)}>Delete </a>
+                                    <Link to={'/nhanviens/edit/' + emp.id}>Edit</Link> |
+                                    <Link to={'/delete/' + emp.id}>Delete</Link>
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
-            </div>
         );
     }
 
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderNhanviensTable(this.state.nhanviens);
+            : this.renderNhanviensTable(this.state.employees);
 
         return (
             <div>
@@ -86,12 +62,4 @@ export class FetchNhanVien extends Component {
     }
 
 
-}
-
-export class NhanvienData {
-    maNv = 0;
-    hoTen = "";
-    thanhPho = "";
-    canHo = "";
-    gioiTinh = "";
 }
