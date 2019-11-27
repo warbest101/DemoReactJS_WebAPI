@@ -13,6 +13,14 @@ namespace DemoReactJS.Controllers
     public class NhanviensController : ControllerBase
     {
         static List<Employee> employees = new List<Employee>();
+        static List<City> cities = new List<City>()
+        {
+            new City{Id = 1, Name = "Hồ Chí Minh" },
+            new City{Id = 2, Name = "Đà Nẵng" },
+            new City{Id = 3, Name = "Vũng Tàu" },
+            new City{Id = 4, Name = "Hải Phòng" },
+            new City{Id = 5, Name = "Hà Nội" }
+        };
         // GET: api/Nhanviens
         [HttpGet("[action]")]
         public IEnumerable<Employee> GetAll()
@@ -68,6 +76,12 @@ namespace DemoReactJS.Controllers
             return 1;
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<City> GetCities()
+        {
+            return cities;
+        }
+
         public partial class Employee
         {
             public int Id { get; set; }
@@ -75,6 +89,11 @@ namespace DemoReactJS.Controllers
             public string Gender { get; set; }
             public string Apartment { get; set; }
             public string City { get; set; }
+        }
+        public partial class City
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
         }
     }
 }

@@ -6,7 +6,13 @@ export class AddNhanVien extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { title: "", loading: true, empData: new EmployeeData() };
+        this.state = { title: "", loading: true, cityList:[], empData: new EmployeeData() };
+
+        fetch('api/Nhanviens/GetCities')
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ cityList: data });
+            });
 
         var empid = this.props.match.params["empid"];
 
@@ -19,7 +25,7 @@ export class AddNhanVien extends Component {
                 });
         }
         else {
-            this.state = { title: "Create", loading: false, empData: new EmployeeData() };
+            this.state = { title: "Create", loading: false, empData: new EmployeeData(), cityList: [] };
         }
 
         this.handleSave = this.handleSave.bind(this);
@@ -53,7 +59,7 @@ export class AddNhanVien extends Component {
     }
 
 
-    renderCreateForm() {
+    renderCreateForm(cityList) {
         return (
             <form onSubmit={this.handleSave}>
                 <div className="form-group row" >
@@ -69,7 +75,6 @@ export class AddNhanVien extends Component {
                     <label className="control-label col-md-12" htmlFor="gender">Gender</label>
                     <div className="col-md-4">
                         <select className="form-control" data-val="true" name="gender" defaultValue={this.state.empData.gender} required>
-                            <option value="">-- Chọn giới tính --</option>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
                         </select>
@@ -85,12 +90,9 @@ export class AddNhanVien extends Component {
                     <label className="control-label col-md-12" htmlFor="city">City</label>
                     <div className="col-md-4">
                         <select className="form-control" data-val="true" name="city" defaultValue={this.state.empData.city} required>
-                            <option value="">-- Chọn thành phố --</option>
-                            <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                            <option value="Đà Nẵng">Đà Nẵng</option>
-                            <option value="Hà Nội">Hà Nội</option>
-                            <option value="Hải Phòng">Hải Phòng</option>
-                            <option value="Vũng Tàu">Vũng Tàu</option>
+                            {cityList.map(c =>
+                                <option>{c.name}</option>)
+                            }
                         </select>
                     </div>
                 </div >
@@ -105,7 +107,7 @@ export class AddNhanVien extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderCreateForm();
+            : this.renderCreateForm(this.state.cityList);
         return <div>
             <h1>{this.state.title}</h1>
             <hr />

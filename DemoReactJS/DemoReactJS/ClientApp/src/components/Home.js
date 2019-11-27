@@ -14,7 +14,7 @@ export class Home extends Component {
           <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
         </ul>
         <p>
-            Our project have 4 main function: Get List of Employee, Add new Employee, Edit Employee information and Delete Employee
+            Our Demo have 4 main function: Get List of Employee, Add new Employee, Edit Employee information and Delete Employee
         </p>
             <p>Here are the members from our group:</p>
             <ul>
