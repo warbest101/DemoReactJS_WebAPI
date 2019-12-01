@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { Link } from 'react-router-dom';  
 
 export class Home extends Component {
   static displayName = Home.name;
@@ -14,7 +15,8 @@ export class Home extends Component {
           <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
         </ul>
         <p>
-            Our Demo have 4 main function: Get List of Employee, Add new Employee, Edit Employee information and Delete Employee
+                We will be creating a sample Employee Record Management system and performing CRUD operations on it. <br></br>
+                <Link to="/fetch-nhanvien">Click Here to start</Link>    
         </p>
             <p>Here are the members from our group:</p>
             <ul>
